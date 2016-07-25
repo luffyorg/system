@@ -7,9 +7,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class WelcomeController {
 	@RequestMapping("welcome" )
-	public ModelAndView index(){
+	public String index(){
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("welcome");
-		return mav;
+		return "login";
 	}
 }

@@ -1,12 +1,12 @@
 package cn.yznu.rzgskhgl.pojo;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import cn.yznu.rzgskhgl.common.BaseEntity;
 
@@ -20,19 +20,24 @@ import cn.yznu.rzgskhgl.common.BaseEntity;
 @Entity
 @Table(name = "user")
 public class User extends BaseEntity implements Serializable {
-	@ManyToMany(targetEntity=Product.class)
+	@ManyToMany(targetEntity = Product.class)
 	@JoinTable(name = "user_product", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "product_id") })
 	private Set<Product> products;
-
-	@OneToMany(targetEntity = RoleUser.class, mappedBy = "user")
-	@Cascade(CascadeType.SAVE_UPDATE)
-	private Set<RoleUser> roleUsers2;
+	@ManyToMany
+	@JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "role_id") })
+	private List<Role> roles;
 	/**
 	 * 姓名
 	 */
 	@Column(length = 50)
-	private String name;
+	private String userName;
+	/**
+	 * 密码
+	 */
+	private String password;
+
 	/**
 	 * 电话
 	 */
@@ -89,17 +94,39 @@ public class User extends BaseEntity implements Serializable {
 	 */
 	@Column(name = "solid_surfacing", length = 2)
 	private int solidSurfacing;
-	
-	@OneToMany(targetEntity = RoleUser.class, mappedBy = "user")
-	@Cascade(CascadeType.SAVE_UPDATE)
-	private Set<RoleUser> roleUsers;
 
-	public String getName() {
-		return name;
+	
+
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
+
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public long getTel() {
@@ -192,7 +219,7 @@ public class User extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", tel=" + tel + ", address=" + address + ", gender=" + gender + ", totalAssets="
+		return "User [name=" + userName + ", tel=" + tel + ", address=" + address + ", gender=" + gender + ", totalAssets="
 				+ totalAssets + ", totalLiability=" + totalLiability + ", creditConditions=" + creditConditions
 				+ ", industry=" + industry + ", estate=" + estate + ", movable=" + movable + ", company=" + company
 				+ ", solidSurfacing=" + solidSurfacing + "]";
@@ -201,7 +228,7 @@ public class User extends BaseEntity implements Serializable {
 	public User(String name, int tel, String address, String gender, double totalAssets, double totalLiability,
 			String creditConditions, String industry, int estate, int movable, int company, int solidSurfacing) {
 		super();
-		this.name = name;
+		this.userName = name;
 		this.tel = tel;
 		this.address = address;
 		this.gender = gender;
@@ -217,6 +244,16 @@ public class User extends BaseEntity implements Serializable {
 
 	public User() {
 		super();
+	}
+
+	@Transient
+	public Set<String> getRolesName() {
+		List<Role> roles = getRoles();
+		Set<String> set = new HashSet<String>();
+		for (Role role : roles) {
+			set.add(role.getRoleName());
+		}
+		return set;
 	}
 
 }

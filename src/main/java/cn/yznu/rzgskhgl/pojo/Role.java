@@ -1,13 +1,10 @@
 package cn.yznu.rzgskhgl.pojo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.*;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -24,24 +21,20 @@ import cn.yznu.rzgskhgl.common.BaseEntity;
 public class Role extends BaseEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Column(name = "role_name", nullable = false, length = 100)
 	private String roleName;// 角色名称
-	
+
 	@Column(name = "role_code", length = 10)
 	private String roleCode;// 角色编码
-	@OneToMany(targetEntity = RoleUser.class, mappedBy = "role")
-	@Cascade(CascadeType.SAVE_UPDATE)
-	private Set<RoleUser> roleUsers;
-	
-	@ManyToMany(targetEntity=Group.class)
-	@JoinTable(name="role_group",
-		joinColumns=@JoinColumn(name="role_id"
-			, referencedColumnName="ID"),
-		inverseJoinColumns=@JoinColumn(name="group_id"
-			, referencedColumnName="ID")
-	)
-	private Set<Group> groups;
+	@ManyToMany
+	@JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "role_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "user_id") })
+	public List<User> users;
+
+	@ManyToMany(targetEntity = Permission.class)
+	@JoinTable(name = "role_group", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "ID"))
+	private List<Permission> permissions;
 
 	public String getRoleName() {
 		return this.roleName;
@@ -59,5 +52,29 @@ public class Role extends BaseEntity implements java.io.Serializable {
 		this.roleCode = roleCode;
 	}
 
-	
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
+
+	public List<Permission> getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(List<Permission> permissions) {
+		this.permissions = permissions;
+	}
+
+	@Transient
+	public List<String> getPermissionsName() {
+		List<String> list = new ArrayList<String>();
+		List<Permission> perlist = getPermissions();
+		for (Permission per : perlist) {
+			list.add(per.getPermissionname());
+		}
+		return list;
+	}
 }

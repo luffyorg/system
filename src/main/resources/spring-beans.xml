@@ -12,12 +12,11 @@
 	default-autowire="byName" default-lazy-init="false">
 	<!-- 启用注解 -->
 	<context:annotation-config />
-	 
+
 	<!-- 启动组件扫描，排除@Controller组件，该组件由SpringMVC配置文件扫描 -->
-	<!-- 加载dao,此时要排除要controller,因为controller已经spring-mvc中加载过了--> 
+	<!-- 加载dao,此时要排除要controller,因为controller已经spring-mvc中加载过了 -->
 	<context:component-scan base-package="cn.yznu.rzgskhgl.dao,cn.yznu.rzgskhgl.service">
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
-
 </beans>
