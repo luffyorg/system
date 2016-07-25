@@ -89,7 +89,7 @@ public class TestUser {
 
 		Role r2 = new Role();
 		r2.setRoleCode("a");
-		r2.setRoleName("manger");
+		r2.setRoleName("manager");
 
 		Role r3 = new Role();
 		r3.setRoleCode("a");
