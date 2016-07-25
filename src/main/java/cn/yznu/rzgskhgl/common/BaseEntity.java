@@ -7,7 +7,11 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.GenericGenerator;
-
+/**
+ * 
+ * @author zhangwei
+ *
+ */
 @SuppressWarnings("serial")
 @MappedSuperclass
 public class BaseEntity implements Serializable {
